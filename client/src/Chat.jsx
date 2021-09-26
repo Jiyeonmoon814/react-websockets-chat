@@ -1,5 +1,5 @@
 import React from 'react'
-import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, useMutation, gql } from '@apollo/client'
+import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, useMutation, useSubscription, gql } from '@apollo/client'
 import { Container, Row, Col, FormInput, Button } from "shards-react"
 
 const client = new ApolloClient({
