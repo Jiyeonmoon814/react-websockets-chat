@@ -1,6 +1,6 @@
 import React from 'react'
 import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apollo/client'
-import { Container } from "shards-react"
+import { Container, Row, Col, FormInput, Button } from "shards-react"
 
 const client = new ApolloClient({
     uri: 'http://localhost:4000/',
@@ -58,8 +58,31 @@ const Messages = ({ user }) => {
 }
 
 const Chat = () => {
+    const [state, stateSet] = React.useState({
+        user: 'Jiyeon',
+        content: '',
+    })
+
     return (
-        <Container><Messages user="Mary" /></Container>
+        <Container>
+            <Messages user={state.user} />
+            <Row>
+                <Col xs={2} style={{ padding:0 }}>
+                    <FormInput 
+                        label="User"
+                        value={state.user}
+                        onChange={(e)=> stateSet({...state,user:e.target.value})}
+                    />
+                </Col>
+                <Col xs={8}>
+                    <FormInput 
+                        label="Content"
+                        value={state.content}
+                        onChange={(e)=> stateSet({...state,content:e.target.value})}
+                    />
+                </Col>
+            </Row>
+        </Container>
     )
 }
 
