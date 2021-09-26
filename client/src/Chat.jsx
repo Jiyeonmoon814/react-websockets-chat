@@ -1,5 +1,5 @@
 import React from 'react'
-import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apollo/client'
+import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, useMutation, gql } from '@apollo/client'
 import { Container, Row, Col, FormInput, Button } from "shards-react"
 
 const client = new ApolloClient({
@@ -16,8 +16,17 @@ const GET_MESSAGE = gql`
         }
     }
 `
+
+const POST_MESSAGE = gql`
+    mutation($user:String!, $content:String!) {
+        postMessage(user:$user, content:$content)
+    }
+`
+
 const Messages = ({ user }) => {
-    const { data } = useQuery(GET_MESSAGE)
+    const { data } = useQuery(GET_MESSAGE, {
+        pollInterval:500,
+    })
     if(!data) {
         return null
     }
@@ -62,16 +71,19 @@ const Chat = () => {
         user: 'Jiyeon',
         content: '',
     })
+    const [postMessage] = useMutation(POST_MESSAGE)
 
     const onSend = () => {
         if(state.content.length > 0){
-
+            postMessage({
+                variables: state,
+            })
         }
 
         setState({
             ...state,
             content:'',
-            
+
         })
     }
 
