@@ -1,5 +1,5 @@
 import React from 'react'
-import { ApolloClient, InMemoryCache, ApolloProvider, useMutation, useSubscription, gql } from '@apollo/client'
+import { ApolloClient, InMemoryCache, ApolloProvider, useMutation, useSubscription, gql, useQuery } from '@apollo/client'
 import { Container, Row, Col, FormInput, Button } from "shards-react"
 import { WebSocketLink } from '@apollo/client/link/ws'
 
@@ -16,6 +16,21 @@ const client = new ApolloClient({
     cache : new InMemoryCache()
 })
 
+/*
+const GET_MESSAGE = gql`
+    query {
+        messages {
+            id
+            content
+            user
+        }
+    }
+`
+*/
+
+// Like queries, subscriptions enable you to fetch data
+// Unlike queyries, subscriptions are long-lasting operations that cna change their result over time 
+// They can maintain an active connection to your GraphQL server, enabling the server to push updates to the subscription's result. 
 const GET_MESSAGE = gql`
     subscription {
         messages {
@@ -33,7 +48,11 @@ const POST_MESSAGE = gql`
 `
 
 const Messages = ({ user }) => {
+    // To run a query within a React component, call useQuery and pass it a GraphQL query string 
+    // Fetch data with useQuery 
+    //const { data } = useQuery(GET_MESSAGE)
     const { data } = useSubscription(GET_MESSAGE)
+
     if(!data) {
         return null
     }
@@ -41,7 +60,7 @@ const Messages = ({ user }) => {
     return (
         <>
             {data.messages.map(({id, user:messageUser, content}) => (
-                <div style={{display:'flex',
+                <div key={id} style={{display:'flex',
                             justifyContent:user === messageUser ? 'flex-end' : 'flex-start',
                             paddingBottom: '1em'}}>
                     { user !== messageUser && (
@@ -78,6 +97,9 @@ const Chat = () => {
         user: 'Jiyeon',
         content: '',
     })
+    // Unlike useQuery, useMutation doesn't esecute its operation automatically on render.
+    // Instead, you call this mutate function 
+    // Event handlers call the mutate function that's returned by the useMutation hook 
     const [postMessage] = useMutation(POST_MESSAGE)
 
     const onSend = () => {
