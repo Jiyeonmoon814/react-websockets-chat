@@ -58,10 +58,22 @@ const Messages = ({ user }) => {
 }
 
 const Chat = () => {
-    const [state, stateSet] = React.useState({
+    const [state, setState] = React.useState({
         user: 'Jiyeon',
         content: '',
     })
+
+    const onSend = () => {
+        if(state.content.length > 0){
+
+        }
+
+        setState({
+            ...state,
+            content:'',
+            
+        })
+    }
 
     return (
         <Container>
@@ -71,16 +83,25 @@ const Chat = () => {
                     <FormInput 
                         label="User"
                         value={state.user}
-                        onChange={(e)=> stateSet({...state,user:e.target.value})}
+                        onChange={(e)=> setState({...state,user:e.target.value})}
                     />
                 </Col>
                 <Col xs={8}>
                     <FormInput 
                         label="Content"
                         value={state.content}
-                        onChange={(e)=> stateSet({...state,content:e.target.value})}
+                        onChange={(e)=> setState({...state,content:e.target.value})}
+                        onKeyUp={(e) => {if(e.keyCode === 13){
+                            onSend() 
+                        }}}                    
                     />
                 </Col>
+                <Col xs={2} style={{padding:0}}>
+                    <Button onClick={(e)=>onSend()}>
+                        Send
+                    </Button>
+                </Col>
+                
             </Row>
         </Container>
     )
